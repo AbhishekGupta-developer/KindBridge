@@ -24,7 +24,6 @@ public class ServerController {
 
     @GetMapping
     public ResponseEntity<ServerStatusResponseDTO> serverStatus() {
-        System.out.println("Hellooooo");
         return new ResponseEntity<>(new ServerStatusResponseDTO(serverStartTime, applicationName), HttpStatus.OK);
     }
 }
