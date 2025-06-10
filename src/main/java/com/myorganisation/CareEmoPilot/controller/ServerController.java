@@ -26,4 +26,5 @@ public class ServerController {
     public ResponseEntity<ServerStatusResponseDTO> serverStatus() {
         return new ResponseEntity<>(new ServerStatusResponseDTO(serverStartTime, applicationName), HttpStatus.OK);
     }
+
 }
