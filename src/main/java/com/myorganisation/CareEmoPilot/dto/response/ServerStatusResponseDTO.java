@@ -1,4 +1,4 @@
-package com.myorganisation.CareEmoPilot.dto;
+package com.myorganisation.CareEmoPilot.dto.response;
 
 import lombok.Getter;
 
