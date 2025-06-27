@@ -23,7 +23,7 @@ public class ServerStatusResponseDTO {
         ZoneId zoneId = ZoneId.systemDefault();
         ZoneOffset zoneOffset = OffsetDateTime.now(zoneId).getOffset();
 
-        this.status = "Server is live!";
+        this.status = "API Server is live!";
         this.artifact = applicationName;
         this.date = currentDateTime.format(dateFormatter);
         this.time = currentDateTime.format(timeFormatter);
