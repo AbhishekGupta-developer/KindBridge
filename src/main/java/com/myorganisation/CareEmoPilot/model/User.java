@@ -2,15 +2,15 @@ package com.myorganisation.CareEmoPilot.model;
 
 import com.myorganisation.CareEmoPilot.model.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -19,37 +19,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name is required")
     @Column(nullable = false)
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
     @Column(nullable = false)
     private String lastName;
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 4, max = 20)
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Email(message = "Email must be valid")
-    @NotBlank(message = "Email is required")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Phone number must be a valid 10-digit Indian number")
-    @NotBlank(message = "Phone number is required")
     @Column(nullable = false, unique = true)
     private String phone;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 15)
     @Column(nullable = false)
     private String password;
 
@@ -68,5 +58,30 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
 }
 
