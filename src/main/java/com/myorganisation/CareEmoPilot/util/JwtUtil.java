@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
-public class JWTUtil {
+public class JwtUtil {
 
     private final String SECRET = "zT9#Fn3@Xe7^Vr!qKpL2$Wu8Df0*GmYaJv1RxNcBZsQ";
     private final SecretKey KEY = Keys.hmacShaKeyFor(SECRET.getBytes());

@@ -1,7 +1,7 @@
 package com.myorganisation.CareEmoPilot.controller;
 
 import com.myorganisation.CareEmoPilot.dto.request.AuthRequestDTO;
-import com.myorganisation.CareEmoPilot.util.JWTUtil;
+import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JWTUtil jwtUtil;
+    private JwtUtil jwtUtil;
 
     @PostMapping
     public ResponseEntity<String> authenticateUser(@RequestBody AuthRequestDTO authRequestDTO) {
