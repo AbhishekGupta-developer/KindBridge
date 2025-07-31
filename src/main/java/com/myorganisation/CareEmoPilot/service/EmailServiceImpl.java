@@ -1,5 +1,6 @@
 package com.myorganisation.CareEmoPilot.service;
 
+import com.myorganisation.CareEmoPilot.model.User;
 import com.myorganisation.CareEmoPilot.repository.UserRepository;
 import com.myorganisation.CareEmoPilot.store.OtpStore;
 import com.myorganisation.CareEmoPilot.util.OtpUtil;
@@ -42,6 +43,17 @@ public class EmailServiceImpl implements EmailService {
         String storedOtp = OtpStore.getOtp(email);
         if(storedOtp != null && storedOtp.equals(otp)) {
             OtpStore.clearOtp(email); // Clear after successful verification
+
+            // Create user record with email only
+            if(!userRepository.existsByEmail(email)) {
+                User user = User.builder()
+                        .email(email)
+                        .isEmailVerified(true)
+                        .password("NOT_SET")  // Will be updated on Signup
+                        .active(false)
+                        .build();
+                userRepository.save(user);
+            }
             return true;
         }
         return false;
