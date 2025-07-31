@@ -1,5 +1,6 @@
 package com.myorganisation.CareEmoPilot.service;
 
+import com.myorganisation.CareEmoPilot.repository.UserRepository;
 import com.myorganisation.CareEmoPilot.store.OtpStore;
 import com.myorganisation.CareEmoPilot.util.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,15 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public void sendOtp(String email) {
+        if(userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email is already registered.");
+        }
+
         String otp = OtpUtil.generateOtp();
         OtpStore.storeOtp(email, otp);
 
