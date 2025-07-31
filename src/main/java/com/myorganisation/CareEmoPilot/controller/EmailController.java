@@ -5,7 +5,6 @@ import com.myorganisation.CareEmoPilot.dto.request.EmailRequestDto;
 import com.myorganisation.CareEmoPilot.service.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,11 +17,6 @@ public class EmailController {
 
     @Autowired
     private EmailService emailService;
-
-    @PostMapping
-    public ResponseEntity<String> random() {
-        return new ResponseEntity<>("Test done", HttpStatus.OK);
-    }
 
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp(@Valid @RequestBody EmailRequestDto request) {
