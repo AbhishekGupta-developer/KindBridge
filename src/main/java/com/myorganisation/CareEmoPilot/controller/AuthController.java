@@ -1,6 +1,6 @@
 package com.myorganisation.CareEmoPilot.controller;
 
-import com.myorganisation.CareEmoPilot.dto.request.AuthRequestDTO;
+import com.myorganisation.CareEmoPilot.dto.request.AuthRequestDto;
 import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity<String> authenticateUser(@RequestBody AuthRequestDTO authRequestDTO) {
+    public ResponseEntity<String> authenticateUser(@RequestBody AuthRequestDto authRequestDTO) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

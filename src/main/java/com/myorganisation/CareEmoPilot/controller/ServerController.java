@@ -1,6 +1,6 @@
 package com.myorganisation.CareEmoPilot.controller;
 
-import com.myorganisation.CareEmoPilot.dto.response.ServerStatusResponseDTO;
+import com.myorganisation.CareEmoPilot.dto.response.ServerStatusResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,8 @@ public class ServerController {
     }
 
     @GetMapping
-    public ResponseEntity<ServerStatusResponseDTO> serverStatus() {
-        return new ResponseEntity<>(new ServerStatusResponseDTO(serverStartTime, applicationName), HttpStatus.OK);
+    public ResponseEntity<ServerStatusResponseDto> serverStatus() {
+        return new ResponseEntity<>(new ServerStatusResponseDto(serverStartTime, applicationName), HttpStatus.OK);
     }
 
 }

@@ -6,7 +6,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-public class ServerStatusResponseDTO {
+public class ServerStatusResponseDto {
     private final String status;
     private final String artifact;
     private final String date;
@@ -15,7 +15,7 @@ public class ServerStatusResponseDTO {
     private final String uptime;
     private final String os;
 
-    public ServerStatusResponseDTO(Instant serverStartTime, String applicationName) {
+    public ServerStatusResponseDto(Instant serverStartTime, String applicationName) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");

@@ -1,7 +1,7 @@
 package com.myorganisation.CareEmoPilot.controller;
 
-import com.myorganisation.CareEmoPilot.dto.request.EmailOtpVerificationRequestDTO;
-import com.myorganisation.CareEmoPilot.dto.request.EmailRequestDTO;
+import com.myorganisation.CareEmoPilot.dto.request.EmailOtpVerificationRequestDto;
+import com.myorganisation.CareEmoPilot.dto.request.EmailRequestDto;
 import com.myorganisation.CareEmoPilot.service.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,13 @@ public class EmailController {
     }
 
     @PostMapping("/send-otp")
-    public ResponseEntity<String> sendOtp(@Valid @RequestBody EmailRequestDTO request) {
+    public ResponseEntity<String> sendOtp(@Valid @RequestBody EmailRequestDto request) {
         emailService.sendOtp(request.getEmail());
         return ResponseEntity.ok("OTP sent to " + request.getEmail());
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOtp(@Valid @RequestBody EmailOtpVerificationRequestDTO request) {
+    public ResponseEntity<String> verifyOtp(@Valid @RequestBody EmailOtpVerificationRequestDto request) {
         boolean isVerified = emailService.verifyOtp(request.getEmail(), request.getOtp());
         if(isVerified) {
             return ResponseEntity.ok("OTP verified successfully!");

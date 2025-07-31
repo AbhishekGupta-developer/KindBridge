@@ -1,8 +1,8 @@
 package com.myorganisation.CareEmoPilot.service;
 
-import com.myorganisation.CareEmoPilot.dto.request.UserRequestDTO;
-import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDTO;
-import com.myorganisation.CareEmoPilot.dto.response.UserResponseDTO;
+import com.myorganisation.CareEmoPilot.dto.request.UserRequestDto;
+import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
+import com.myorganisation.CareEmoPilot.dto.response.UserResponseDto;
 import com.myorganisation.CareEmoPilot.model.User;
 import com.myorganisation.CareEmoPilot.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserResponseDTO registerUser(UserRequestDTO requestDTO) {
+    public UserResponseDto registerUser(UserRequestDto requestDTO) {
         User user = User.builder()
                 .firstName(requestDTO.getFirstName())
                 .lastName(requestDTO.getLastName())
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDTO> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return userRepository.findAll().stream()
                 .filter(User::isActive) // Only return active users
                 .map(this::mapToDTO)
@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO getUserById(Long id) {
+    public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         return mapToDTO(user);
     }
 
     @Override
-    public UserResponseDTO updateUser(Long id, UserRequestDTO requestDTO) {
+    public UserResponseDto updateUser(Long id, UserRequestDto requestDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
@@ -72,11 +72,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GenericResponseDTO removeUser(Long id) {
+    public GenericResponseDto removeUser(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
 
         if(userOptional.isEmpty() || !userOptional.get().isActive()) {
-            return GenericResponseDTO.builder()
+            return GenericResponseDto.builder()
                     .success(false)
                     .message("User not found with id: " + id)
                     .build();
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         user.setActive(false); // ✅ Soft delete
         userRepository.save(user);
 
-        return GenericResponseDTO.builder()
+        return GenericResponseDto.builder()
                 .success(true)
                 .message("User removed successfully.")
                 .build();
@@ -94,8 +94,8 @@ public class UserServiceImpl implements UserService {
     }
 
     // Helper method to convert User entity to UserResponseDTO
-    private UserResponseDTO mapToDTO(User user) {
-        return UserResponseDTO.builder()
+    private UserResponseDto mapToDTO(User user) {
+        return UserResponseDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

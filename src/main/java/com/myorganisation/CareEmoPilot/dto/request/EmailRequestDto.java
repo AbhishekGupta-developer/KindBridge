@@ -7,13 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EmailOtpVerificationRequestDTO {
+public class EmailRequestDto {
 
     @Email
     @NotBlank
     private String email;
-
-    @NotBlank
-    private String otp;
-
 }

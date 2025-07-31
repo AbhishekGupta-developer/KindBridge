@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GenericResponseDTO {
+public class GenericResponseDto {
     private boolean success;
     private String message;
 }
