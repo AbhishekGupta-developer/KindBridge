@@ -26,17 +26,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(HttpMethod.GET, "/").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/email/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
     }
 
     @Bean
