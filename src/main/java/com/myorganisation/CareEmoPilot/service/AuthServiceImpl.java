@@ -1,5 +1,6 @@
 package com.myorganisation.CareEmoPilot.service;
 
+import com.myorganisation.CareEmoPilot.constants.UserConstants;
 import com.myorganisation.CareEmoPilot.dto.request.SigninRequestDto;
 import com.myorganisation.CareEmoPilot.dto.request.SignupRequestDto;
 import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
@@ -7,6 +8,9 @@ import com.myorganisation.CareEmoPilot.model.User;
 import com.myorganisation.CareEmoPilot.repository.UserRepository;
 import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +18,9 @@ import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -25,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public GenericResponseDto completeSignup(String authHeader, SignupRequestDto signupRequestDto) {
+    public GenericResponseDto signup(String authHeader, SignupRequestDto signupRequestDto) {
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return GenericResponseDto.builder()
                             .success(false)
@@ -64,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
-        if(user.getPassword() != null && !"NOT_SET".equals(user.getPassword())) {
+        if(user.getPassword() != null && !UserConstants.PASSWORD_NOT_SET.equals(user.getPassword())) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Password already set")
@@ -87,7 +94,8 @@ public class AuthServiceImpl implements AuthService {
     public GenericResponseDto signin(SigninRequestDto signinRequestDto) {
         User user = userRepository.findByEmail(signinRequestDto.getEmail())
                 .orElse(null);
-        if (user == null) {
+
+        if(user == null) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Invalid credentials")
@@ -95,7 +103,27 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
-        if (!Boolean.TRUE.equals(user.getIsEmailVerified())) {
+        if(!user.isActive()) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Account not active")
+                    .data(null)
+                    .build();
+        }
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(signinRequestDto.getEmail(), signinRequestDto.getPassword())
+            );
+        } catch(AuthenticationException e) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Invalid credentials")
+                    .data(null)
+                    .build();
+        }
+
+        if(!Boolean.TRUE.equals(user.getIsEmailVerified())) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")
@@ -103,23 +131,8 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
-        if (user.getPassword() == null || "NOT_SET".equals(user.getPassword())) {
-            return GenericResponseDto.builder()
-                    .success(false)
-                    .message("Password not set")
-                    .data(null)
-                    .build();
-        }
-
-        if (!passwordEncoder.matches(signinRequestDto.getPassword(), user.getPassword())) {
-            return GenericResponseDto.builder()
-                    .success(false)
-                    .message("Invalid credentials")
-                    .data(null)
-                    .build();
-        }
-
         String authToken = jwtUtil.generateAuthToken(user.getEmail());
+
         return GenericResponseDto.builder()
                 .success(true)
                 .message("Signin successful")

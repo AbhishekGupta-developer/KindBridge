@@ -1,5 +1,6 @@
 package com.myorganisation.CareEmoPilot.service;
 
+import com.myorganisation.CareEmoPilot.constants.UserConstants;
 import com.myorganisation.CareEmoPilot.dto.request.EmailOtpVerificationRequestDto;
 import com.myorganisation.CareEmoPilot.dto.request.EmailRequestDto;
 import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
@@ -74,7 +75,7 @@ public class EmailServiceImpl implements EmailService {
                 User user = User.builder()
                         .email(email)
                         .isEmailVerified(true)
-                        .password("NOT_SET")  // Will be updated on Signup
+                        .password(UserConstants.PASSWORD_NOT_SET)  // Will be updated on Signup
                         .active(false)
                         .build();
                 userRepository.save(user);

@@ -1,20 +1,18 @@
 package com.myorganisation.CareEmoPilot.controller;
 
-import com.myorganisation.CareEmoPilot.dto.request.AuthRequestDto;
 import com.myorganisation.CareEmoPilot.dto.request.EmailOtpVerificationRequestDto;
 import com.myorganisation.CareEmoPilot.dto.request.EmailRequestDto;
+import com.myorganisation.CareEmoPilot.dto.request.SigninRequestDto;
 import com.myorganisation.CareEmoPilot.dto.request.SignupRequestDto;
 import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
-import com.myorganisation.CareEmoPilot.service.EmailService;
 import com.myorganisation.CareEmoPilot.service.AuthService;
+import com.myorganisation.CareEmoPilot.service.EmailService;
 import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -45,11 +43,16 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<GenericResponseDto> completeSignup(
+    public ResponseEntity<GenericResponseDto> signup(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody SignupRequestDto signupRequestDto
     ) {
-        return new ResponseEntity<>(authService.completeSignup(authHeader, signupRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(authService.signup(authHeader, signupRequestDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<GenericResponseDto> signin(@Valid @RequestBody SigninRequestDto signinRequestDto) {
+        return new ResponseEntity<>(authService.signin(signinRequestDto), HttpStatus.OK);
     }
 
 //    @PostMapping
