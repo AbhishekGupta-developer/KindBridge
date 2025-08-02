@@ -40,5 +40,6 @@ public class UserRequestDto {
     private Role role;
 
     private boolean anonymous;
+
 }
 

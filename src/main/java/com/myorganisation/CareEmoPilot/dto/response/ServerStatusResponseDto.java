@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 public class ServerStatusResponseDto {
+
     private final String status;
     private final String artifact;
     private final String date;
@@ -40,4 +41,5 @@ public class ServerStatusResponseDto {
 
         return String.format("%02d hours %02d minutes %02d seconds", hours, minutes, seconds);
     }
+
 }

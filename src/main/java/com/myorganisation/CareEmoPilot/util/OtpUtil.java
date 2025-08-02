@@ -3,6 +3,7 @@ package com.myorganisation.CareEmoPilot.util;
 import java.security.SecureRandom;
 
 public class OtpUtil {
+
     private static final SecureRandom random = new SecureRandom();
     private static final int OTP_LENGTH = 6;
 
@@ -13,4 +14,5 @@ public class OtpUtil {
         }
         return sb.toString();
     }
+
 }

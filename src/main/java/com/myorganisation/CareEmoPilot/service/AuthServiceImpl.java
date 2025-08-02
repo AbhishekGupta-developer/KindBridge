@@ -139,4 +139,5 @@ public class AuthServiceImpl implements AuthService {
                 .data(Map.of("authToken", authToken))
                 .build();
     }
+
 }

@@ -12,4 +12,5 @@ public class EmailRequestDto {
     @Email
     @NotBlank
     private String email;
+
 }

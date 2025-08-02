@@ -106,4 +106,5 @@ public class UserServiceImpl implements UserService {
                 .anonymous(user.isAnonymous())
                 .build();
     }
+
 }

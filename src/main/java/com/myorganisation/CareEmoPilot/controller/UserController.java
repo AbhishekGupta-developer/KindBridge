@@ -44,4 +44,5 @@ public class UserController {
         GenericResponseDto genericResponseDTO = userService.removeUser(id);
         return new ResponseEntity<>(genericResponseDTO, (genericResponseDTO.isSuccess()) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
+
 }

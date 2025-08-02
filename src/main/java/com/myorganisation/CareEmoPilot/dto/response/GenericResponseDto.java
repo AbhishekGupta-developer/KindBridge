@@ -8,7 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class GenericResponseDto {
+
     private boolean success;
     private String message;
     private Object data;
+
 }

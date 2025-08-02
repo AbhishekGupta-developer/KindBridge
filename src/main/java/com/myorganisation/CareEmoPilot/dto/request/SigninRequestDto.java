@@ -8,10 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SigninRequestDto {
+
     @Email
     @NotBlank
     private String email;
 
     @NotBlank
     private String password;
+
 }

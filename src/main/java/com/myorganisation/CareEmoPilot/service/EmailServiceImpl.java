@@ -95,4 +95,5 @@ public class EmailServiceImpl implements EmailService {
                 .data(null)
                 .build();
     }
+
 }

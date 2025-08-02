@@ -7,7 +7,6 @@ import com.myorganisation.CareEmoPilot.dto.response.UserResponseDto;
 import java.util.List;
 
 public interface UserService {
-
     UserResponseDto registerUser(UserRequestDto requestDTO);
     List<UserResponseDto> getAllUsers();
     UserResponseDto getUserById(Long id);

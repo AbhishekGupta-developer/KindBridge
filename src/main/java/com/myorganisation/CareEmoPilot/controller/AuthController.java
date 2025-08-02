@@ -55,20 +55,4 @@ public class AuthController {
         return new ResponseEntity<>(authService.signin(signinRequestDto), HttpStatus.OK);
     }
 
-//    @PostMapping
-//    public ResponseEntity<String> authenticateUser(@RequestBody AuthRequestDto authRequestDTO) {
-//        try {
-//            authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            authRequestDTO.getUsername(),
-//                            authRequestDTO.getPassword()
-//                    )
-//            );
-//
-//            return new ResponseEntity<>(jwtUtil.generateToken(authRequestDTO.getUsername()), HttpStatus.OK);
-//        } catch(AuthenticationException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//    }
 }

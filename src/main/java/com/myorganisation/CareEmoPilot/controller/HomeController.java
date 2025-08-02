@@ -14,4 +14,5 @@ public class HomeController {
     public ResponseEntity<String> home() {
         return new ResponseEntity<>("Welcome to CareEmoPilot!", HttpStatus.OK);
     }
+
 }
