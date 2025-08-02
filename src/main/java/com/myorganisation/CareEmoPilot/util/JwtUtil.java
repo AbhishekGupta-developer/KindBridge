@@ -46,4 +46,24 @@ public class JwtUtil {
         return parse(token).getBody().getSubject();
     }
 
+    //Signin logic here
+    public String generateAuthToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("purpose", "auth")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME * 12 * 24)) // e.g., 24 hours if EXPIRATION_TIME is 5 min base
+                .signWith(KEY, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public boolean isValidAuthToken(String token) {
+        try {
+            Claims c = parse(token).getBody();
+            return "auth".equals(c.get("purpose", String.class));
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
 }

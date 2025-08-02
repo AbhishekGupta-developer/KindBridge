@@ -6,7 +6,7 @@ import com.myorganisation.CareEmoPilot.dto.request.EmailRequestDto;
 import com.myorganisation.CareEmoPilot.dto.request.SignupRequestDto;
 import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
 import com.myorganisation.CareEmoPilot.service.EmailService;
-import com.myorganisation.CareEmoPilot.service.SignupService;
+import com.myorganisation.CareEmoPilot.service.AuthService;
 import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class AuthController {
     private EmailService emailService;
 
     @Autowired
-    private SignupService signupService;
+    private AuthService authService;
 
     @PostMapping("/signup/email/send-otp")
     public ResponseEntity<GenericResponseDto> sendOtp(@Valid @RequestBody EmailRequestDto emailRequestDto) {
@@ -49,23 +49,23 @@ public class AuthController {
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody SignupRequestDto signupRequestDto
     ) {
-        return new ResponseEntity<>(signupService.completeSignup(authHeader, signupRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(authService.completeSignup(authHeader, signupRequestDto), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<String> authenticateUser(@RequestBody AuthRequestDto authRequestDTO) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authRequestDTO.getUsername(),
-                            authRequestDTO.getPassword()
-                    )
-            );
-
-            return new ResponseEntity<>(jwtUtil.generateToken(authRequestDTO.getUsername()), HttpStatus.OK);
-        } catch(AuthenticationException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
+//    @PostMapping
+//    public ResponseEntity<String> authenticateUser(@RequestBody AuthRequestDto authRequestDTO) {
+//        try {
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            authRequestDTO.getUsername(),
+//                            authRequestDTO.getPassword()
+//                    )
+//            );
+//
+//            return new ResponseEntity<>(jwtUtil.generateToken(authRequestDTO.getUsername()), HttpStatus.OK);
+//        } catch(AuthenticationException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
 }
