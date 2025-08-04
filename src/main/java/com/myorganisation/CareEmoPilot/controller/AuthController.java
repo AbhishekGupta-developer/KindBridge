@@ -39,7 +39,7 @@ public class AuthController {
 
     @PostMapping("/signup/email/verify-otp")
     public ResponseEntity<GenericResponseDto> verifyOtp(@Valid @RequestBody EmailOtpVerificationRequestDto emailOtpVerificationRequestDto) {
-        return new ResponseEntity<>(emailService.verifyOtp(emailOtpVerificationRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(emailService.verifyOtp(emailOtpVerificationRequestDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/signup")

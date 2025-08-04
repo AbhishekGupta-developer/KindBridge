@@ -1,6 +1,6 @@
 package com.myorganisation.CareEmoPilot.dto.response;
 
-import com.myorganisation.CareEmoPilot.model.enums.Role;
+import com.myorganisation.CareEmoPilot.model.enums.RoleType;
 import lombok.*;
 
 @Getter
@@ -16,7 +16,7 @@ public class UserResponseDto {
     private String username;
     private String email;
     private String phone;
-    private Role role;
+    private RoleType roleType;
     private boolean anonymous;
 
 }

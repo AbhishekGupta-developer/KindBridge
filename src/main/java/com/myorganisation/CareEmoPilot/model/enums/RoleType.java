@@ -1,7 +1,8 @@
 package com.myorganisation.CareEmoPilot.model.enums;
 
-public enum Role {
+public enum RoleType {
     SEEKER,
-    PROVIDER,
-    ADMIN
+    SUPPORTER,
+    ADMIN,
+    GUEST
 }

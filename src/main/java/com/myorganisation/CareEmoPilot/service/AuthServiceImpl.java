@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(signupRequestDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if(!Boolean.TRUE.equals(user.getIsEmailVerified())) {
+        if(!user.isEmailVerified()) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")
@@ -123,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
-        if(!Boolean.TRUE.equals(user.getIsEmailVerified())) {
+        if(!user.isEmailVerified()) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")

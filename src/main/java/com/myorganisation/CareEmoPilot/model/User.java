@@ -1,6 +1,8 @@
 package com.myorganisation.CareEmoPilot.model;
 
-import com.myorganisation.CareEmoPilot.model.enums.Role;
+import com.myorganisation.CareEmoPilot.model.enums.AreaType;
+import com.myorganisation.CareEmoPilot.model.enums.RoleType;
+import com.myorganisation.CareEmoPilot.model.enums.SupporterType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,25 +30,42 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private Boolean isEmailVerified = false;
-    private String password;
+    @Column(nullable = false)
+    private boolean isEmailVerified = false;
 
     @Column(nullable = false)
+    private String password;
+
+    // set active = true after successful password setup
+    @Column(nullable = false)
     private boolean active = false;
+
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
+
+    @Enumerated(EnumType.STRING)
+    private SupporterType supporterType;
+
+    @ElementCollection(targetClass = AreaType.class)
+    @CollectionTable(name = "user_areas", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "area")
+    private List<AreaType> areas;
 
     private String firstName;
     private String lastName;
 
-    @Column(unique = true)
-    private String username;
+//    @Column(unique = true, nullable = true)
+//    private String username;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = true)
     private String phone;
 
-    @Enumerated(EnumType.STRING)
-    private Role role; // SEEKER or PROVIDER or ADMIN
-
     private boolean anonymous;
+
+    // set isRegistrationCompleted = true after completion of registration
+    @Column(nullable = false)
+    private boolean isRegistrationCompleted = false;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -55,28 +74,37 @@ public class User implements UserDetails {
     private LocalDateTime updatedAt;
 
     @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(() -> "ROLE_" + (role != null ? role.name() : RoleType.GUEST.name()));
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+//        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+//        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+//        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+//        return UserDetails.super.isEnabled();
+        return this.active;
     }
 
 }
