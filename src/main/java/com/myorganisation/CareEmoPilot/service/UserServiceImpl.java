@@ -1,110 +1,99 @@
 package com.myorganisation.CareEmoPilot.service;
 
-import com.myorganisation.CareEmoPilot.dto.request.UserRequestDto;
+import com.myorganisation.CareEmoPilot.dto.request.CompleteRegistrationRequestDto;
 import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
-import com.myorganisation.CareEmoPilot.dto.response.UserResponseDto;
 import com.myorganisation.CareEmoPilot.model.User;
+import com.myorganisation.CareEmoPilot.model.enums.RoleType;
 import com.myorganisation.CareEmoPilot.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public UserResponseDto registerUser(UserRequestDto requestDTO) {
-        User user = User.builder()
-                .firstName(requestDTO.getFirstName())
-                .lastName(requestDTO.getLastName())
-                .username(requestDTO.getUsername())
-                .email(requestDTO.getEmail())
-                .phone(requestDTO.getPhone())
-                .password(requestDTO.getPassword()) // Note: encrypt later when security is added
-                .role(requestDTO.getRole())
-                .anonymous(requestDTO.isAnonymous())
-                .active(true)
-                .build();
+    public GenericResponseDto completeRegistration(String email, CompleteRegistrationRequestDto completeRegistrationRequestDto) {
+        System.out.println("Email: " + email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        User saved = userRepository.save(user);
-        return mapToDTO(saved);
-    }
-
-    @Override
-    public List<UserResponseDto> getAllUsers() {
-        return userRepository.findAll().stream()
-                .filter(User::isActive) // Only return active users
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserResponseDto getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        return mapToDTO(user);
-    }
-
-    @Override
-    public UserResponseDto updateUser(Long id, UserRequestDto requestDTO) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-
-        user.setFirstName(requestDTO.getFirstName());
-        user.setLastName(requestDTO.getLastName());
-        user.setUsername(requestDTO.getUsername());
-        user.setEmail(requestDTO.getEmail());
-        user.setPhone(requestDTO.getPhone());
-        user.setPassword(requestDTO.getPassword());
-        user.setRole(requestDTO.getRole());
-        user.setAnonymous(requestDTO.isAnonymous());
-
-        User updated = userRepository.save(user);
-        return mapToDTO(updated);
-    }
-
-    @Override
-    public GenericResponseDto removeUser(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if(userOptional.isEmpty() || !userOptional.get().isActive()) {
+        // If the role already set, optionally you can prevent re-completion
+        if(user.getRole() != null) {
             return GenericResponseDto.builder()
                     .success(false)
-                    .message("User not found with id: " + id)
+                    .message("Registration already completed")
+                    .data(null)
                     .build();
         }
 
-        User user = userOptional.get();
-        user.setActive(false); // ✅ Soft delete
+        // Validate role-specific requirements
+        if(completeRegistrationRequestDto.getRole() == RoleType.SEEKER) {
+            user.setRole(RoleType.SEEKER);
+
+            // Seeker should not provide supporterType; ignore if present
+            user.setSupporterType(null);
+            user.setAnonymous(false); // seekers are not anonymous per flow
+        } else if(completeRegistrationRequestDto.getRole() == RoleType.SUPPORTER) {
+            user.setRole(RoleType.SUPPORTER);
+
+            // supporterType must be present
+            if (completeRegistrationRequestDto.getSupporterType() == null) {
+                return GenericResponseDto.builder()
+                        .success(false)
+                        .message("Supporter type is required for supporters")
+                        .data(null)
+                        .build();
+            }
+
+            user.setSupporterType(completeRegistrationRequestDto.getSupporterType());
+            user.setAnonymous(Boolean.TRUE.equals(completeRegistrationRequestDto.getAnonymous()));
+        } else {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Invalid role")
+                    .data(null)
+                    .build();
+        }
+
+        // Common required fields
+        if(isBlank(completeRegistrationRequestDto.getFirstName()) || isBlank(completeRegistrationRequestDto.getLastName())) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("First name and last name are required")
+                    .data(null)
+                    .build();
+        }
+
+        user.setFirstName(completeRegistrationRequestDto.getFirstName());
+        user.setLastName(completeRegistrationRequestDto.getLastName());
+
+        if(completeRegistrationRequestDto.getAreas() == null || completeRegistrationRequestDto.getAreas().isEmpty()) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("At least one area must be selected")
+                    .data(null)
+                    .build();
+        }
+
+        user.setAreas(completeRegistrationRequestDto.getAreas());
+
+        user.setRegistrationCompleted(true);
         userRepository.save(user);
 
         return GenericResponseDto.builder()
                 .success(true)
-                .message("User removed successfully.")
+                .message("Registration complete")
+                .data(null)
                 .build();
-
     }
 
-    // Helper method to convert User entity to UserResponseDTO
-    private UserResponseDto mapToDTO(User user) {
-        return UserResponseDto.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .role(user.getRole())
-                .anonymous(user.isAnonymous())
-                .build();
+    // Helper methods
+
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
     }
 
 }
