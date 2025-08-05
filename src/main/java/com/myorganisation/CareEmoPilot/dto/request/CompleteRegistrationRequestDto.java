@@ -1,8 +1,8 @@
 package com.myorganisation.CareEmoPilot.dto.request;
 
-import com.myorganisation.CareEmoPilot.model.enums.AreaType;
-import com.myorganisation.CareEmoPilot.model.enums.RoleType;
-import com.myorganisation.CareEmoPilot.model.enums.SupporterType;
+import com.myorganisation.CareEmoPilot.enums.AreaType;
+import com.myorganisation.CareEmoPilot.enums.RoleType;
+import com.myorganisation.CareEmoPilot.enums.SupporterType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

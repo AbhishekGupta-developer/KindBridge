@@ -17,14 +17,27 @@ public class JwtUtil {
     private static final String PURPOSE_CLAIM = "purpose";
     private static final String SIGNUP_PURPOSE = "signup";
     private static final String AUTH_PURPOSE = "auth";
+    private static final String PASSWORD_RESET_PURPOSE = "passwordReset";
 
-    private final long SIGNUP_EXPIRATION = 1000L * 60 * 5;        // 5 minutes
-    private final long AUTH_EXPIRATION = 1000L * 60 * 60 * 24;    // 24 hours
+    private final long SIGNUP_EXPIRATION = 1000L * 60 * 5; // 5 minutes
+    private final long AUTH_EXPIRATION = 1000L * 60 * 60 * 24; // 24 hours
+    private final long PASSWORD_RESET_EXPIRATION = 1000L * 60 * 5; // 5 minutes
 
     private final SecretKey key;
 
     public JwtUtil(@Value("${jwt.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    private Jws<Claims> parse(String token) throws JwtException {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
+    }
+
+    public String extractEmail(String token) {
+        return parse(token).getPayload().getSubject();
     }
 
     //Signup JWT logic here
@@ -38,13 +51,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    private Jws<Claims> parse(String token) throws JwtException {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token);
-    }
-
     public boolean isValidSignupToken(String token) {
         try {
             Claims c = parse(token).getPayload();
@@ -52,10 +58,6 @@ public class JwtUtil {
         } catch(JwtException e) {
             return false;
         }
-    }
-
-    public String extractEmail(String token) {
-        return parse(token).getPayload().getSubject();
     }
 
     //Signin logic here
@@ -74,6 +76,26 @@ public class JwtUtil {
             Claims c = parse(token).getPayload();
             return AUTH_PURPOSE.equals(c.get(PURPOSE_CLAIM, String.class));
         } catch (JwtException e) {
+            return false;
+        }
+    }
+
+    //Password reset JWT logic here
+    public String generatePasswordResetToken(String email) {
+        return Jwts.builder()
+                .subject(email)
+                .claim(PURPOSE_CLAIM, PASSWORD_RESET_PURPOSE)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + PASSWORD_RESET_EXPIRATION))
+                .signWith(key, Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public boolean isValidPasswordResetToken(String token) {
+        try {
+            Claims c = parse(token).getPayload();
+            return PASSWORD_RESET_PURPOSE.equals(c.get(PURPOSE_CLAIM, String.class));
+        } catch(JwtException e) {
             return false;
         }
     }

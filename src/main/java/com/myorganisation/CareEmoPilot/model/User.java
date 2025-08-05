@@ -1,8 +1,8 @@
 package com.myorganisation.CareEmoPilot.model;
 
-import com.myorganisation.CareEmoPilot.model.enums.AreaType;
-import com.myorganisation.CareEmoPilot.model.enums.RoleType;
-import com.myorganisation.CareEmoPilot.model.enums.SupporterType;
+import com.myorganisation.CareEmoPilot.enums.AreaType;
+import com.myorganisation.CareEmoPilot.enums.RoleType;
+import com.myorganisation.CareEmoPilot.enums.SupporterType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

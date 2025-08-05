@@ -1,6 +1,6 @@
 package com.myorganisation.CareEmoPilot.dto.response;
 
-import com.myorganisation.CareEmoPilot.model.enums.RoleType;
+import com.myorganisation.CareEmoPilot.enums.RoleType;
 import lombok.*;
 
 @Getter

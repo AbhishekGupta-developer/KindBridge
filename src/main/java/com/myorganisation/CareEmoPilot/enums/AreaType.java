@@ -1,4 +1,4 @@
-package com.myorganisation.CareEmoPilot.model.enums;
+package com.myorganisation.CareEmoPilot.enums;
 
 public enum AreaType {
     // Inbuilt

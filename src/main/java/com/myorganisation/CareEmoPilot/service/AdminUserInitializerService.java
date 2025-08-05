@@ -1,7 +1,7 @@
 package com.myorganisation.CareEmoPilot.service;
 
+import com.myorganisation.CareEmoPilot.enums.RoleType;
 import com.myorganisation.CareEmoPilot.model.User;
-import com.myorganisation.CareEmoPilot.model.enums.RoleType;
 import com.myorganisation.CareEmoPilot.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

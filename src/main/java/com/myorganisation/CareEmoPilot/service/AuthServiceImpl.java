@@ -1,8 +1,8 @@
 package com.myorganisation.CareEmoPilot.service;
 
 import com.myorganisation.CareEmoPilot.constants.UserConstants;
+import com.myorganisation.CareEmoPilot.dto.request.EmailAndPasswordRequestDto;
 import com.myorganisation.CareEmoPilot.dto.request.SigninRequestDto;
-import com.myorganisation.CareEmoPilot.dto.request.SignupRequestDto;
 import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
 import com.myorganisation.CareEmoPilot.model.User;
 import com.myorganisation.CareEmoPilot.repository.UserRepository;
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public GenericResponseDto signup(String authHeader, SignupRequestDto signupRequestDto) {
+    public GenericResponseDto signup(String authHeader, EmailAndPasswordRequestDto emailAndPasswordRequestDto) {
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return GenericResponseDto.builder()
                             .success(false)
@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String emailFromToken = jwtUtil.extractEmail(signupToken);
-        if(!emailFromToken.equals(signupRequestDto.getEmail())) {
+        if(!emailFromToken.equals(emailAndPasswordRequestDto.getEmail())) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email mismatch")
@@ -60,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
-        User user = userRepository.findByEmail(signupRequestDto.getEmail())
+        User user = userRepository.findByEmail(emailAndPasswordRequestDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if(!user.isEmailVerified()) {
@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
-        user.setPassword(passwordEncoder.encode(signupRequestDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(emailAndPasswordRequestDto.getPassword()));
         user.setActive(true);
         userRepository.save(user);
 
@@ -137,6 +137,64 @@ public class AuthServiceImpl implements AuthService {
                 .success(true)
                 .message("Signin successful")
                 .data(Map.of("authToken", authToken))
+                .build();
+    }
+
+    @Override
+    public GenericResponseDto resetPassword(String authHeader, EmailAndPasswordRequestDto emailAndPasswordRequestDto) {
+        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Missing or malformed token")
+                    .data(null)
+                    .build();
+        }
+
+        String passwordResetToken = authHeader.substring(7);
+
+        if(passwordResetToken == null || !jwtUtil.isValidPasswordResetToken(passwordResetToken)) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Invalid or expired signup token")
+                    .data(null)
+                    .build();
+        }
+
+        String emailFromToken = jwtUtil.extractEmail(passwordResetToken);
+        if(!emailFromToken.equals(emailAndPasswordRequestDto.getEmail())) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Email mismatch")
+                    .data(null)
+                    .build();
+        }
+
+        User user = userRepository.findByEmail(emailAndPasswordRequestDto.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(!user.isEmailVerified()) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Email not verified")
+                    .data(null)
+                    .build();
+        }
+
+        if(!user.isActive()) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("User is not active")
+                    .data(null)
+                    .build();
+        }
+
+        user.setPassword(passwordEncoder.encode(emailAndPasswordRequestDto.getPassword()));
+        userRepository.save(user);
+
+        return GenericResponseDto.builder()
+                .success(true)
+                .message("Password reset successfully")
+                .data(null)
                 .build();
     }
 

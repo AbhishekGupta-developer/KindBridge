@@ -2,8 +2,8 @@ package com.myorganisation.CareEmoPilot.service;
 
 import com.myorganisation.CareEmoPilot.dto.request.CompleteRegistrationRequestDto;
 import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
+import com.myorganisation.CareEmoPilot.enums.RoleType;
 import com.myorganisation.CareEmoPilot.model.User;
-import com.myorganisation.CareEmoPilot.model.enums.RoleType;
 import com.myorganisation.CareEmoPilot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

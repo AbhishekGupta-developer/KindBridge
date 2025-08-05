@@ -1,5 +1,6 @@
 package com.myorganisation.CareEmoPilot.config;
 
+import com.myorganisation.CareEmoPilot.enums.RoleType;
 import com.myorganisation.CareEmoPilot.filter.JwtAuthFilter;
 import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
@@ -47,9 +48,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(HttpMethod.GET, "/").permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.GET, "/").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api").hasRole(RoleType.ADMIN.name())
+                        .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
