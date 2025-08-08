@@ -8,24 +8,16 @@ import com.myorganisation.CareEmoPilot.dto.response.GenericResponseDto;
 import com.myorganisation.CareEmoPilot.enums.OtpPurpose;
 import com.myorganisation.CareEmoPilot.service.AuthService;
 import com.myorganisation.CareEmoPilot.service.EmailService;
-import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @Autowired
     private EmailService emailService;
