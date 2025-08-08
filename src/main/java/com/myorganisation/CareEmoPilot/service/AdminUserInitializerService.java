@@ -19,7 +19,7 @@ public class AdminUserInitializerService {
 
                 admin.setEmail("careemopilot@gmail.com");
                 admin.setEmailVerified(true);
-                admin.setPassword(passwordEncoder.encode("admin@CEP-25"));
+                admin.setPassword(passwordEncoder.encode("admin@CEP25"));
                 admin.setActive(true);
                 admin.setRole(RoleType.ADMIN);
                 admin.setSupporterType(null);
