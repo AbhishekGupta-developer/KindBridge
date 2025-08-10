@@ -10,9 +10,11 @@ import com.myorganisation.CareEmoPilot.repository.UserRepository;
 import com.myorganisation.CareEmoPilot.store.OtpStore;
 import com.myorganisation.CareEmoPilot.util.JwtUtil;
 import com.myorganisation.CareEmoPilot.util.OtpUtil;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -53,26 +55,47 @@ public class EmailServiceImpl implements EmailService {
         String otp = OtpUtil.generateOtp();
         OtpStore.storeOtp(email, otp);
 
-        String subject = "CareEmoPilot OTP Code";
+        String subject = "CareEmoPilot - " + (otpPurpose == OtpPurpose.SIGNUP ? "Signup OTP" : "Password Reset OTP");
 
-        StringBuilder mailBody = new StringBuilder();
-        mailBody.append("Your OTP is: ").append(otp).append("\n");
-        String messagePostBody = (otpPurpose == OtpPurpose.SIGNUP) ?
-                "This OTP is to Signup to CareEmoPilot and it is valid for 5 min only. Do not share it with anyone." :
-                "This OTP is to reset password of your CareEmoPilot account and it is valid for 5 min only. Do not share it with anyone.";
-        mailBody.append(messagePostBody);
+        String purposeMessage = (otpPurpose == OtpPurpose.SIGNUP)
+                ? "Use the OTP below to complete your signup process."
+                : "Use the OTP below to reset your password.";
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(email);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(mailBody.toString());
+        String htmlBody = """
+        <html>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <h2 style="color: #4CAF50;">CareEmoPilot</h2>
+            <p>Hello,</p>
+            <p>%s</p>
+            <div style="padding: 10px; background-color: #f3f3f3; border-radius: 5px; display: inline-block;">
+                <h3 style="margin: 0; color: #333;">%s</h3>
+            </div>
+            <p>This OTP is valid for <b>5 minutes</b>. Please do not share it with anyone.</p>
+            <p>Thank you,<br/>CareEmoPilot Team</p>
+        </body>
+        </html>
+    """.formatted(purposeMessage, otp);
 
-        mailSender.send(mailMessage);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true); // true enables HTML
+
+            mailSender.send(mimeMessage);
+        } catch (Exception e) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Failed to send OTP email. Please try again later.")
+                    .build();
+        }
 
         return GenericResponseDto.builder()
                 .success(true)
                 .message("OTP sent to " + email)
-                .data(Map.of("Purpose", otpPurpose.name()))
+                .data(Map.of("purpose", otpPurpose.name()))
                 .build();
     }
 
