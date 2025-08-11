@@ -62,19 +62,19 @@ public class EmailServiceImpl implements EmailService {
                 : "Use the OTP below to reset your password.";
 
         String htmlBody = """
-        <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <h2 style="color: #4CAF50;">CareEmoPilot</h2>
-            <p>Hello,</p>
-            <p>%s</p>
-            <div style="padding: 10px; background-color: #f3f3f3; border-radius: 5px; display: inline-block;">
-                <h3 style="margin: 0; color: #333;">%s</h3>
-            </div>
-            <p>This OTP is valid for <b>5 minutes</b>. Please do not share it with anyone.</p>
-            <p>Thank you,<br/>CareEmoPilot Team</p>
-        </body>
-        </html>
-    """.formatted(purposeMessage, otp);
+                <html>
+                    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                        <h2 style="color: #4CAF50;">CareEmoPilot</h2>
+                        <p>Hello,</p>
+                        <p>%s</p>
+                        <div style="padding: 10px; background-color: #f3f3f3; border-radius: 5px; display: inline-block;">
+                            <h3 style="margin: 0; color: #333;">%s</h3>
+                        </div>
+                        <p>This OTP is valid for <b>5 minutes</b>. Please do not share it with anyone.</p>
+                        <p>Thank you,<br/>CareEmoPilot Team</p>
+                    </body>
+                </html>
+                """.formatted(purposeMessage, otp);
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
