@@ -14,10 +14,10 @@ public class AdminUserInitializerService {
     @Bean
     public CommandLineRunner createAdminUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            if(userRepository.findByEmail("careemopilot@gmail.com").isEmpty()) {
+            if(userRepository.findByEmail("kindbridge@gmail.com").isEmpty()) {
                 User admin = new User();
 
-                admin.setEmail("careemopilot@gmail.com");
+                admin.setEmail("kindbridge@gmail.com");
                 admin.setEmailVerified(true);
                 admin.setPassword(passwordEncoder.encode("admin@CEP25"));
                 admin.setActive(true);
