@@ -54,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
         String otp = OtpUtil.generateOtp();
         OtpStore.storeOtp(email, otp);
 
-        String subject = "CareEmoPilot - " + (otpPurpose == OtpPurpose.SIGNUP ? "Signup OTP" : "Password Reset OTP");
+        String subject = "KindBridge - " + (otpPurpose == OtpPurpose.SIGNUP ? "Signup OTP" : "Password Reset OTP");
 
         String purposeMessage = (otpPurpose == OtpPurpose.SIGNUP)
                 ? "Use the OTP below to complete your signup process."
@@ -63,14 +63,14 @@ public class EmailServiceImpl implements EmailService {
         String htmlBody = """
                 <html>
                     <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                        <h2 style="color: #4CAF50;">CareEmoPilot</h2>
+                        <h2 style="color: #4CAF50;">KindBridge</h2>
                         <p>Hello,</p>
                         <p>%s</p>
                         <div style="padding: 10px; background-color: #f3f3f3; border-radius: 5px; display: inline-block;">
                             <h3 style="margin: 0; color: #333;">%s</h3>
                         </div>
                         <p>This OTP is valid for <b>5 minutes</b>. Please do not share it with anyone.</p>
-                        <p>Thank you,<br/>CareEmoPilot Team</p>
+                        <p>Thank you,<br/>KindBridge Team</p>
                     </body>
                 </html>
                 """.formatted(purposeMessage, otp);
