@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CareEmoPilotApplication {
+public class KindBridgeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CareEmoPilotApplication.class, args);
+		SpringApplication.run(KindBridgeApplication.class, args);
 	}
 
 }
