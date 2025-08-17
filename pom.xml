@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.myorganisation</groupId>
-	<artifactId>CareEmoPilot</artifactId>
+	<artifactId>KindBridge</artifactId>
 	<version>0.1.1-SNAPSHOT</version>
-	<name>CareEmoPilot</name>
-	<description>Backend of CareEmo built in Spring Boot</description>
+	<name>KindBridge</name>
+	<description>Backend of KindBridge built in Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
