@@ -12,7 +12,7 @@ public class HomeController {
 
     @GetMapping
     public ResponseEntity<String> home() {
-        return new ResponseEntity<>("Welcome to CareEmoPilot!", HttpStatus.OK);
+        return new ResponseEntity<>("Welcome to KindBridge", HttpStatus.OK);
     }
 
 }
