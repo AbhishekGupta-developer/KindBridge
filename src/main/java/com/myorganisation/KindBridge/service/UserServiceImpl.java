@@ -3,6 +3,7 @@ package com.myorganisation.KindBridge.service;
 import com.myorganisation.KindBridge.dto.request.CompleteRegistrationRequestDto;
 import com.myorganisation.KindBridge.dto.response.GenericResponseDto;
 import com.myorganisation.KindBridge.enums.RoleType;
+import com.myorganisation.KindBridge.exception.UserNotFoundException;
 import com.myorganisation.KindBridge.model.User;
 import com.myorganisation.KindBridge.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
     public GenericResponseDto completeRegistration(String email, CompleteRegistrationRequestDto completeRegistrationRequestDto) {
         System.out.println("Email: " + email);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User email: " + email + " doesn't exist"));
 
         // If the role already set, optionally you can prevent re-completion
         if(user.getRole() != null) {
