@@ -5,6 +5,7 @@ import com.myorganisation.KindBridge.dto.request.EmailOtpVerificationRequestDto;
 import com.myorganisation.KindBridge.dto.request.EmailRequestDto;
 import com.myorganisation.KindBridge.dto.response.GenericResponseDto;
 import com.myorganisation.KindBridge.enums.OtpPurpose;
+import com.myorganisation.KindBridge.exception.InvalidOtpException;
 import com.myorganisation.KindBridge.model.User;
 import com.myorganisation.KindBridge.repository.UserRepository;
 import com.myorganisation.KindBridge.store.OtpStore;
@@ -142,11 +143,7 @@ public class EmailServiceImpl implements EmailService {
             }
         }
 
-        return GenericResponseDto.builder()
-                .success(false)
-                .message("OTP verification failed")
-                .details(null)
-                .build();
+        throw new InvalidOtpException("OTP verification failed");
     }
 
 }
