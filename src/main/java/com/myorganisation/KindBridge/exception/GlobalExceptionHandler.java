@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage())
         );
 
-        genericResponseDto.setData(errors);
+        genericResponseDto.setDetails(errors);
 
         return new ResponseEntity<>(genericResponseDto, HttpStatusCode.valueOf(400));
     }

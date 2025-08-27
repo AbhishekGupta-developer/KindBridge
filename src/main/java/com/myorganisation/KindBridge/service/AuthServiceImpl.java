@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                             .success(false)
                             .message("Missing or malformed token")
-                            .data(null)
+                            .details(null)
                             .build();
         }
 
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Invalid or expired signup token")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email mismatch")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -75,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Password already set")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
         return GenericResponseDto.builder()
                 .success(true)
                 .message("Signup complete")
-                .data(null)
+                .details(null)
                 .build();
     }
 
@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Invalid credentials")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -107,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Account not active")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -119,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Invalid credentials")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -136,7 +136,7 @@ public class AuthServiceImpl implements AuthService {
         return GenericResponseDto.builder()
                 .success(true)
                 .message("Signin successful")
-                .data(Map.of("authToken", authToken))
+                .details(Map.of("authToken", authToken))
                 .build();
     }
 
@@ -146,7 +146,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Missing or malformed token")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -156,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Invalid or expired signup token")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -165,7 +165,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email mismatch")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -176,7 +176,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -184,7 +184,7 @@ public class AuthServiceImpl implements AuthService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("User is not active")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -194,7 +194,7 @@ public class AuthServiceImpl implements AuthService {
         return GenericResponseDto.builder()
                 .success(true)
                 .message("Password reset successfully")
-                .data(null)
+                .details(null)
                 .build();
     }
 

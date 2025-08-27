@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Registration already completed")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
                 return GenericResponseDto.builder()
                         .success(false)
                         .message("Supporter type is required for supporters")
-                        .data(null)
+                        .details(null)
                         .build();
             }
 
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Invalid role")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("First name and last name are required")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("At least one area must be selected")
-                    .data(null)
+                    .details(null)
                     .build();
         }
 
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         return GenericResponseDto.builder()
                 .success(true)
                 .message("Registration complete")
-                .data(null)
+                .details(null)
                 .build();
     }
 

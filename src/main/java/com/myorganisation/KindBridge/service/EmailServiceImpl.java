@@ -94,7 +94,7 @@ public class EmailServiceImpl implements EmailService {
         return GenericResponseDto.builder()
                 .success(true)
                 .message("OTP sent to " + email)
-                .data(Map.of("purpose", otpPurpose.name()))
+                .details(Map.of("purpose", otpPurpose.name()))
                 .build();
     }
 
@@ -125,7 +125,7 @@ public class EmailServiceImpl implements EmailService {
                 return GenericResponseDto.builder()
                         .success(true)
                         .message("OTP verified")
-                        .data(Map.of("signupToken", signupToken))
+                        .details(Map.of("signupToken", signupToken))
                         .build();
 
             } else if(otpPurpose == OtpPurpose.PASSWORD_RESET) {
@@ -136,7 +136,7 @@ public class EmailServiceImpl implements EmailService {
                     return GenericResponseDto.builder()
                             .success(true)
                             .message("OTP verified")
-                            .data(Map.of("passwordResetToken", passwordResetToken))
+                            .details(Map.of("passwordResetToken", passwordResetToken))
                             .build();
                 }
             }
@@ -145,7 +145,7 @@ public class EmailServiceImpl implements EmailService {
         return GenericResponseDto.builder()
                 .success(false)
                 .message("OTP verification failed")
-                .data(null)
+                .details(null)
                 .build();
     }
 
