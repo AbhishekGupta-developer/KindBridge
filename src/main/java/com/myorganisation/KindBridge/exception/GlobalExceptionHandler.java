@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GenericResponseDto> handleUserNotFoundException(UserNotFoundException e) {
         GenericResponseDto genericResponseDto = new GenericResponseDto();
         genericResponseDto.setSuccess(false);
-        genericResponseDto.setMessage("User not found");
+        genericResponseDto.setMessage(e.getMessage());
 
         return new ResponseEntity<>(genericResponseDto, HttpStatusCode.valueOf(404));
     }
