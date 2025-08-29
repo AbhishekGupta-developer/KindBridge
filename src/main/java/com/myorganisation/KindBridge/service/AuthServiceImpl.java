@@ -4,6 +4,7 @@ import com.myorganisation.KindBridge.constants.UserConstants;
 import com.myorganisation.KindBridge.dto.request.EmailAndPasswordRequestDto;
 import com.myorganisation.KindBridge.dto.request.SigninRequestDto;
 import com.myorganisation.KindBridge.dto.response.GenericResponseDto;
+import com.myorganisation.KindBridge.exception.UserNotFoundException;
 import com.myorganisation.KindBridge.model.User;
 import com.myorganisation.KindBridge.repository.UserRepository;
 import com.myorganisation.KindBridge.util.JwtUtil;
@@ -61,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = userRepository.findByEmail(emailAndPasswordRequestDto.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User email: " + emailAndPasswordRequestDto.getEmail() + " doesn't exist"));
 
         if(!user.isEmailVerified()) {
             return GenericResponseDto.builder()
@@ -170,7 +171,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = userRepository.findByEmail(emailAndPasswordRequestDto.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User email: " + emailAndPasswordRequestDto.getEmail() + " doesn't exist"));
 
         if(!user.isEmailVerified()) {
             return GenericResponseDto.builder()
