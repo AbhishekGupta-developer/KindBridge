@@ -23,15 +23,15 @@ public class JwtUtil {
     private final long AUTH_EXPIRATION = 1000L * 60 * 60 * 24; // 24 hours
     private final long PASSWORD_RESET_EXPIRATION = 1000L * 60 * 5; // 5 minutes
 
-    private final SecretKey key;
+    private final SecretKey KEY;
 
     public JwtUtil(@Value("${jwt.secret}") String secret) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.KEY = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     private Jws<Claims> parse(String token) throws JwtException {
         return Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(KEY)
                 .build()
                 .parseSignedClaims(token);
     }
@@ -47,7 +47,7 @@ public class JwtUtil {
                 .claim(PURPOSE_CLAIM, SIGNUP_PURPOSE)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + SIGNUP_EXPIRATION))
-                .signWith(key, Jwts.SIG.HS256)
+                .signWith(KEY, Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -67,7 +67,7 @@ public class JwtUtil {
                 .claim(PURPOSE_CLAIM, AUTH_PURPOSE)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + AUTH_EXPIRATION))
-                .signWith(key, Jwts.SIG.HS256)
+                .signWith(KEY, Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -87,7 +87,7 @@ public class JwtUtil {
                 .claim(PURPOSE_CLAIM, PASSWORD_RESET_PURPOSE)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + PASSWORD_RESET_EXPIRATION))
-                .signWith(key, Jwts.SIG.HS256)
+                .signWith(KEY, Jwts.SIG.HS256)
                 .compact();
     }
 
