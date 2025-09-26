@@ -146,4 +146,56 @@ public class EmailServiceImpl implements EmailService {
         throw new InvalidOtpException("OTP verification failed");
     }
 
+    @Override
+    public GenericResponseDto sendSigninAlert(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        String userFullName = user.getFirstName() + " " + user.getLastName();
+        String time = "Unknown";
+        String ipAddress = "Unknown";
+        String device = "Unknown";
+
+        String subject = "KindBridge - Sign-in Alert";
+
+        String htmlBody = """
+                <html>
+                    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                        <h2 style="color: #4CAF50;">KindBridge</h2>
+                        <p>Hello %s,</p>
+                        <p>We noticed a sign-in to your KindBridge account.</p>
+                        <p><strong>Sign-in Details:</strong></p>
+                        <ul>
+                            <li>Time: %s</li>
+                            <li>IP Address: %s</li>
+                            <li>Device: %s</li>
+                        </ul>
+                        <p>If this was you, no further action is needed. If you did not sign in, please reset your password immediately.</p>
+                        <p>Thank you,<br/>KindBridge Team</p>
+                    </body>
+                </html>
+                """.formatted(userFullName, time, ipAddress, device);
+
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo(email);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true); // true enables HTML
+
+            mailSender.send(mimeMessage);
+        } catch (Exception e) {
+            return GenericResponseDto.builder()
+                    .success(false)
+                    .message("Failed to send OTP email. Please try again later.")
+                    .build();
+        }
+
+        return GenericResponseDto.builder()
+                .success(true)
+                .message("OTP sent to " + email)
+                .details(Map.of("purpose", "Sign-in Alert"))
+                .build();
+    }
+
 }
