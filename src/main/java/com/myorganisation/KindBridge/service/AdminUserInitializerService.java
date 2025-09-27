@@ -3,6 +3,8 @@ package com.myorganisation.KindBridge.service;
 import com.myorganisation.KindBridge.enums.RoleType;
 import com.myorganisation.KindBridge.model.User;
 import com.myorganisation.KindBridge.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AdminUserInitializerService {
+
+    private Logger logger = LoggerFactory.getLogger(AdminUserInitializerService.class);
 
     @Bean
     public CommandLineRunner createAdminUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -32,7 +36,7 @@ public class AdminUserInitializerService {
                 admin.setRegistrationCompleted(true);
 
                 userRepository.save(admin);
-                System.out.println("Default admin user created!");
+                logger.info("Default admin user created!");
             }
         };
     }
