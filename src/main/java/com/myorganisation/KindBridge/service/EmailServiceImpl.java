@@ -6,6 +6,7 @@ import com.myorganisation.KindBridge.dto.request.EmailRequestDto;
 import com.myorganisation.KindBridge.dto.response.GenericResponseDto;
 import com.myorganisation.KindBridge.enums.OtpPurpose;
 import com.myorganisation.KindBridge.exception.InvalidOtpException;
+import com.myorganisation.KindBridge.exception.UserNotFoundException;
 import com.myorganisation.KindBridge.model.User;
 import com.myorganisation.KindBridge.repository.UserRepository;
 import com.myorganisation.KindBridge.store.OtpStore;
@@ -148,14 +149,17 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public GenericResponseDto sendSigninAlert(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User email: " + email + " doesn't exist"));
 
-        String userFullName = user.getFirstName() + " " + user.getLastName();
+        StringBuilder userFullName = new StringBuilder();
+        userFullName.append((user.getFirstName() != null) ? user.getFirstName() : "");
+        userFullName.append((user.getLastName() != null) ? " " + user.getLastName() : "");
+
         String time = "Unknown";
         String ipAddress = "Unknown";
         String device = "Unknown";
 
-        String subject = "KindBridge - Sign-in Alert";
+        String subject = "KindBridge - Signin Alert";
 
         String htmlBody = """
                 <html>
@@ -194,7 +198,7 @@ public class EmailServiceImpl implements EmailService {
         return GenericResponseDto.builder()
                 .success(true)
                 .message("OTP sent to " + email)
-                .details(Map.of("purpose", "Sign-in Alert"))
+                .details(Map.of("purpose", "Signin Alert"))
                 .build();
     }
 
