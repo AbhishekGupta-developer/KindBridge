@@ -32,6 +32,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public GenericResponseDto signup(String authHeader, EmailAndPasswordRequestDto emailAndPasswordRequestDto) {
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -133,6 +136,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String authToken = jwtUtil.generateAuthToken(user.getEmail());
+
+        emailService.sendSigninAlert(signinRequestDto.getEmail());
 
         return GenericResponseDto.builder()
                 .success(true)
