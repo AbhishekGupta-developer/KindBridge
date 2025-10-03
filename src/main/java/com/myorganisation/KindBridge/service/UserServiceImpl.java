@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         return GenericResponseDto.builder()
                 .success(true)
                 .message("Registration complete")
-                .details(null)
+                .details(mapUserToUserResponseDto(user))
                 .build();
     }
 
