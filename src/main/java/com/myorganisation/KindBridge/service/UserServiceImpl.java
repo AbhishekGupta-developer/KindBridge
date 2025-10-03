@@ -17,7 +17,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GenericResponseDto completeRegistration(String email, CompleteRegistrationRequestDto completeRegistrationRequestDto) {
-        System.out.println("Email: " + email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User email: " + email + " doesn't exist"));
 
