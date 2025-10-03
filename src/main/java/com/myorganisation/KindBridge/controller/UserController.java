@@ -25,7 +25,6 @@ public class UserController {
             @AuthenticationPrincipal(expression = "username") String email,
             @Valid @RequestBody CompleteRegistrationRequestDto completeRegistrationRequestDto
     ) {
-        System.out.println("Email inside controller: " + email);
         return new ResponseEntity<>(userService.completeRegistration(email, completeRegistrationRequestDto), HttpStatus.OK);
     }
 
