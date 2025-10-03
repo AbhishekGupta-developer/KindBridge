@@ -2,6 +2,7 @@ package com.myorganisation.KindBridge.service;
 
 import com.myorganisation.KindBridge.dto.request.CompleteRegistrationRequestDto;
 import com.myorganisation.KindBridge.dto.response.GenericResponseDto;
+import com.myorganisation.KindBridge.dto.response.UserResponseDto;
 import com.myorganisation.KindBridge.enums.RoleType;
 import com.myorganisation.KindBridge.exception.UserNotFoundException;
 import com.myorganisation.KindBridge.model.User;
@@ -96,4 +97,24 @@ public class UserServiceImpl implements UserService {
         return s == null || s.trim().isEmpty();
     }
 
+    // Helper method to map User to UserResponseDto
+    private UserResponseDto mapUserToUserResponseDto(User user) {
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setId(user.getId());
+        userResponseDto.setEmail(user.getEmail());
+        userResponseDto.setEmailVerified(user.isEmailVerified());
+        userResponseDto.setActive(user.isActive());
+        userResponseDto.setRole(user.getRole());
+        userResponseDto.setSupporterType(user.getSupporterType());
+        userResponseDto.setAreas(user.getAreas());
+        userResponseDto.setFirstName(user.getFirstName());
+        userResponseDto.setLastName(user.getLastName());
+        userResponseDto.setPhone(user.getPhone());
+        userResponseDto.setAnonymous(user.isAnonymous());
+        userResponseDto.setRegistrationCompleted(user.isRegistrationCompleted());
+        userResponseDto.setCreatedAt(user.getCreatedAt());
+        userResponseDto.setUpdatedAt(user.getUpdatedAt());
+
+        return userResponseDto;
+    }
 }
