@@ -49,7 +49,7 @@ public class AuthController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<GenericResponseDto> signout() {
+    public ResponseEntity<GenericResponseDto> signout(@Valid @RequestBody EmailRequestDto emailRequestDto) {
         return null;
     }
 
