@@ -55,6 +55,9 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserMetaData metaData;
+
 //    @Column(unique = true, nullable = true)
 //    private String username;
 
