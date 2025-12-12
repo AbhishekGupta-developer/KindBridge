@@ -8,10 +8,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class SendEmailThread extends Thread {
 
-    private JavaMailSender mailSender;
-    private String email;
-    private String subject;
-    private String htmlBody;
+    private final JavaMailSender mailSender;
+    private final String email;
+    private final String subject;
+    private final String htmlBody;
 
     public SendEmailThread(JavaMailSender mailSender, String email, String subject, String htmlBody) {
         this.mailSender = mailSender;
