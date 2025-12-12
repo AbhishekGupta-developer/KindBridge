@@ -77,21 +77,8 @@ public class EmailServiceImpl implements EmailService {
                 </html>
                 """.formatted(purposeMessage, otp);
 
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
-            helper.setTo(email);
-            helper.setSubject(subject);
-            helper.setText(htmlBody, true); // true enables HTML
-
-            mailSender.send(mimeMessage);
-        } catch (Exception e) {
-            return GenericResponseDto.builder()
-                    .success(false)
-                    .message("Failed to send OTP email. Please try again later.")
-                    .build();
-        }
+        SendEmailThread sendEmailThread = new SendEmailThread(mailSender, email, subject, htmlBody);
+        sendEmailThread.start();
 
         return GenericResponseDto.builder()
                 .success(true)
