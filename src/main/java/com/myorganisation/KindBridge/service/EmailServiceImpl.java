@@ -12,12 +12,12 @@ import com.myorganisation.KindBridge.repository.UserRepository;
 import com.myorganisation.KindBridge.store.OtpStore;
 import com.myorganisation.KindBridge.util.JwtUtil;
 import com.myorganisation.KindBridge.util.OtpUtil;
-import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Service
@@ -142,7 +142,11 @@ public class EmailServiceImpl implements EmailService {
         userFullName.append((user.getFirstName() != null) ? user.getFirstName() : "");
         userFullName.append((user.getLastName() != null) ? " " + user.getLastName() : "");
 
-        String time = "Unknown";
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        String dateAndTime = currentDateTime.format(dateFormatter) + " at " + currentDateTime.format(timeFormatter);
         String ipAddress = "Unknown";
         String device = "Unknown";
 
@@ -156,7 +160,7 @@ public class EmailServiceImpl implements EmailService {
                         <p>We noticed a sign-in to your KindBridge account.</p>
                         <p><strong>Sign-in Details:</strong></p>
                         <ul>
-                            <li>Time: %s</li>
+                            <li>Date and Time: %s</li>
                             <li>IP Address: %s</li>
                             <li>Device: %s</li>
                         </ul>
@@ -164,23 +168,10 @@ public class EmailServiceImpl implements EmailService {
                         <p>Thank you,<br/>KindBridge Team</p>
                     </body>
                 </html>
-                """.formatted(userFullName, time, ipAddress, device);
+                """.formatted(userFullName, dateAndTime, ipAddress, device);
 
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
-            helper.setTo(email);
-            helper.setSubject(subject);
-            helper.setText(htmlBody, true); // true enables HTML
-
-            mailSender.send(mimeMessage);
-        } catch (Exception e) {
-            return GenericResponseDto.builder()
-                    .success(false)
-                    .message("Failed to send OTP email. Please try again later.")
-                    .build();
-        }
+        SendEmailThread sendEmailThread = new SendEmailThread(mailSender, email, subject, htmlBody);
+        sendEmailThread.start();
 
         return GenericResponseDto.builder()
                 .success(true)
