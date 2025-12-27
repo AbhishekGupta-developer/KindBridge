@@ -3,10 +3,7 @@ package com.myorganisation.KindBridge.dto.response;
 import com.myorganisation.KindBridge.enums.AreaType;
 import com.myorganisation.KindBridge.enums.RoleType;
 import com.myorganisation.KindBridge.enums.SupporterType;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
