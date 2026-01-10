@@ -52,17 +52,11 @@ public class User implements UserDetails {
     @Column(name = "area")
     private List<AreaType> areas;
 
-    private String firstName;
-    private String lastName;
-
     @OneToOne(cascade = CascadeType.ALL)
     private UserMetaData metaData;
 
 //    @Column(unique = true, nullable = true)
 //    private String username;
-
-    @Column(unique = true, nullable = true)
-    private String phone;
 
     private boolean anonymous;
 
