@@ -1,20 +1,20 @@
 package com.myorganisation.KindBridge.service;
 
 import com.myorganisation.KindBridge.dto.request.CompleteRegistrationRequestDto;
+import com.myorganisation.KindBridge.dto.request.UserProfileRequestDto;
 import com.myorganisation.KindBridge.dto.response.GenericResponseDto;
 import com.myorganisation.KindBridge.dto.response.UserResponseDto;
-import com.myorganisation.KindBridge.enums.RoleType;
+import com.myorganisation.KindBridge.enums.UserProfileType;
+import com.myorganisation.KindBridge.enums.UserRoleType;
 import com.myorganisation.KindBridge.exception.UserNotFoundException;
 import com.myorganisation.KindBridge.model.User;
+import com.myorganisation.KindBridge.model.UserProfile;
 import com.myorganisation.KindBridge.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    //update
-
     @Autowired
     private UserRepository userRepository;
 
@@ -33,26 +33,12 @@ public class UserServiceImpl implements UserService {
         }
 
         // Validate role-specific requirements
-        if(completeRegistrationRequestDto.getRole() == RoleType.SEEKER) {
-            user.setRole(RoleType.SEEKER);
-
-            // Seeker should not provide supporterType; ignore if present
-            user.setSupporterType(null);
-            user.setAnonymous(false); // seekers are not anonymous per flow
-        } else if(completeRegistrationRequestDto.getRole() == RoleType.SUPPORTER) {
-            user.setRole(RoleType.SUPPORTER);
-
-            // supporterType must be present
-            if (completeRegistrationRequestDto.getSupporterType() == null) {
-                return GenericResponseDto.builder()
-                        .success(false)
-                        .message("Supporter type is required for supporters")
-                        .details(null)
-                        .build();
-            }
-
-            user.setSupporterType(completeRegistrationRequestDto.getSupporterType());
-            user.setAnonymous(Boolean.TRUE.equals(completeRegistrationRequestDto.getAnonymous()));
+        if(completeRegistrationRequestDto.getRole() == UserRoleType.SEEKER) {
+            user.setRole(UserRoleType.SEEKER);
+            // future scopes
+        } else if(completeRegistrationRequestDto.getRole() == UserRoleType.PROVIDER) {
+            user.setRole(UserRoleType.PROVIDER);
+            // future scopes
         } else {
             return GenericResponseDto.builder()
                     .success(false)
@@ -61,29 +47,15 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
 
-        // Common required fields
-        if(isBlank(completeRegistrationRequestDto.getFirstName()) || isBlank(completeRegistrationRequestDto.getLastName())) {
-            return GenericResponseDto.builder()
-                    .success(false)
-                    .message("First name and last name are required")
-                    .details(null)
-                    .build();
-        }
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUser(user);
+        userProfile.setType(UserProfileType.INDEPENDENT);
 
-        user.setFirstName(completeRegistrationRequestDto.getFirstName());
-        user.setLastName(completeRegistrationRequestDto.getLastName());
+        user.setProfile(userProfile);
 
-        if(completeRegistrationRequestDto.getAreas() == null || completeRegistrationRequestDto.getAreas().isEmpty()) {
-            return GenericResponseDto.builder()
-                    .success(false)
-                    .message("At least one area must be selected")
-                    .details(null)
-                    .build();
-        }
+        mapUserProfileRequestDtoToUserProfile(completeRegistrationRequestDto.getUserProfile(), user.getProfile());
 
-        user.setAreas(completeRegistrationRequestDto.getAreas());
-
-        user.setRegistrationCompleted(true);
+        user.getMetaData().setRegistrationCompleted(true);
         userRepository.save(user);
 
         return GenericResponseDto.builder()
@@ -102,21 +74,29 @@ public class UserServiceImpl implements UserService {
     // Helper method to map User to UserResponseDto
     private UserResponseDto mapUserToUserResponseDto(User user) {
         UserResponseDto userResponseDto = new UserResponseDto();
+
         userResponseDto.setId(user.getId());
         userResponseDto.setEmail(user.getEmail());
-        userResponseDto.setEmailVerified(user.isEmailVerified());
         userResponseDto.setActive(user.isActive());
         userResponseDto.setRole(user.getRole());
-        userResponseDto.setSupporterType(user.getSupporterType());
-        userResponseDto.setAreas(user.getAreas());
-        userResponseDto.setFirstName(user.getFirstName());
-        userResponseDto.setLastName(user.getLastName());
-        userResponseDto.setPhone(user.getPhone());
-        userResponseDto.setAnonymous(user.isAnonymous());
-        userResponseDto.setRegistrationCompleted(user.isRegistrationCompleted());
+        userResponseDto.setProfile(user.getProfile().getId());
+        userResponseDto.setMetadata(user.getMetaData().getId());
         userResponseDto.setCreatedAt(user.getCreatedAt());
         userResponseDto.setUpdatedAt(user.getUpdatedAt());
 
         return userResponseDto;
+    }
+
+    private void mapUserProfileRequestDtoToUserProfile(UserProfileRequestDto userProfileRequestDto, UserProfile userProfile) {
+        userProfile.setFirstName(userProfileRequestDto.getFirstName());
+        userProfile.setMiddleName(userProfileRequestDto.getMiddleName());
+        userProfile.setLastName(userProfileRequestDto.getLastName());
+        userProfile.setDateOfBirth(userProfileRequestDto.getDateOfBirth());
+        userProfile.setGender(userProfileRequestDto.getGender());
+        userProfile.setBirthTime(userProfileRequestDto.getBirthTime());
+        userProfile.setBirthCity(userProfileRequestDto.getBirthCity());
+        userProfile.setBirthCountry(userProfileRequestDto.getBirthCountry());
+        userProfile.setEmail(userProfileRequestDto.getEmail());
+        userProfile.setPhoneNumber(userProfileRequestDto.getPhoneNumber());
     }
 }

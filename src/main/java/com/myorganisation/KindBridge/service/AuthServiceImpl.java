@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(emailAndPasswordRequestDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User email: " + emailAndPasswordRequestDto.getEmail() + " doesn't exist"));
 
-        if(!user.isEmailVerified()) {
+        if(!user.getMetaData().isEmailVerified()) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")
@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
-        if(!user.isEmailVerified()) {
+        if(!user.getMetaData().isEmailVerified()) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")
@@ -178,7 +178,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(emailAndPasswordRequestDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User email: " + emailAndPasswordRequestDto.getEmail() + " doesn't exist"));
 
-        if(!user.isEmailVerified()) {
+        if(!user.getMetaData().isEmailVerified()) {
             return GenericResponseDto.builder()
                     .success(false)
                     .message("Email not verified")

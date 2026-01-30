@@ -1,6 +1,6 @@
 package com.myorganisation.KindBridge.config;
 
-import com.myorganisation.KindBridge.enums.RoleType;
+import com.myorganisation.KindBridge.enums.UserRoleType;
 import com.myorganisation.KindBridge.filter.JwtAuthFilter;
 import com.myorganisation.KindBridge.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api").hasRole(RoleType.ADMIN.name())
+                        .requestMatchers("/api").hasRole(UserRoleType.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager())

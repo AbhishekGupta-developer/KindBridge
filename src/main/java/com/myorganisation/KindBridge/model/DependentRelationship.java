@@ -1,29 +1,25 @@
 package com.myorganisation.KindBridge.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
-public class UserMetaData {
+@Table(name = "dependent_relationships")
+public class DependentRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
-    private boolean isEmailVerified = false;
+    private String relation;
 
-    @Column(nullable = false)
-    private Boolean registrationCompleted = false;
-
-    private String meta;
+    @OneToOne(mappedBy = "dependent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private UserProfile profile;
 }
+

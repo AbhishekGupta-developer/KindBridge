@@ -5,9 +5,12 @@ import com.myorganisation.KindBridge.dto.request.EmailOtpVerificationRequestDto;
 import com.myorganisation.KindBridge.dto.request.EmailRequestDto;
 import com.myorganisation.KindBridge.dto.response.GenericResponseDto;
 import com.myorganisation.KindBridge.enums.OtpPurpose;
+import com.myorganisation.KindBridge.enums.UserProfileType;
 import com.myorganisation.KindBridge.exception.InvalidOtpException;
 import com.myorganisation.KindBridge.exception.UserNotFoundException;
 import com.myorganisation.KindBridge.model.User;
+import com.myorganisation.KindBridge.model.UserMetaData;
+import com.myorganisation.KindBridge.model.UserProfile;
 import com.myorganisation.KindBridge.repository.UserRepository;
 import com.myorganisation.KindBridge.store.OtpStore;
 import com.myorganisation.KindBridge.util.JwtUtil;
@@ -100,12 +103,22 @@ public class EmailServiceImpl implements EmailService {
             if(otpPurpose == OtpPurpose.SIGNUP) {
                 // Create user record with email only
                 if(!userRepository.existsByEmail(email)) {
-                    User user = User.builder()
-                            .email(email)
-                            .isEmailVerified(true)
-                            .password(UserConstants.PASSWORD_NOT_SET)  // Will be updated on Signup
-                            .active(false)
-                            .build();
+                    User user = new User();
+                    user.setEmail(email);
+                    user.setPassword(UserConstants.PASSWORD_NOT_SET); // Will be updated on Signup
+                    user.setActive(false);
+                    user.setRole(null);
+
+                    user.setDependents(null);
+
+                    UserMetaData metaData = new UserMetaData();
+                    metaData.setUser(user);
+                    metaData.setEmailVerified(true);
+                    metaData.setRegistrationCompleted(false);
+                    metaData.setMeta("User email is verified");
+
+                    user.setMetaData(metaData);
+
                     userRepository.save(user);
                 }
 
@@ -138,9 +151,13 @@ public class EmailServiceImpl implements EmailService {
     public GenericResponseDto sendSigninAlert(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User email: " + email + " doesn't exist"));
 
+        UserProfile userProfile = user.getProfile();
         StringBuilder userFullName = new StringBuilder();
-        userFullName.append((user.getFirstName() != null) ? user.getFirstName() : "");
-        userFullName.append((user.getLastName() != null) ? " " + user.getLastName() : "");
+        if(userProfile != null) {
+            userFullName.append((userProfile.getFirstName() != null) ? userProfile.getFirstName() : "");
+            userFullName.append((userProfile.getMiddleName() != null) ? " " + userProfile.getMiddleName() : "");
+            userFullName.append((userProfile.getLastName() != null) ? " " + userProfile.getLastName() : "");
+        }
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
